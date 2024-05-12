@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <script lang="javascript">
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get("email");
+
+        // If email is null, that means it wasn't provided in the URL
+        if (!email) {
+          console.error("Email not provided in URL");
+        }
+
+        fetch(`/api/clipboard?email=${encodeURIComponent(email)}`)
+          .then((response) => response.text())
+          .then((email) => {
+            navigator.clipboard
+              .writeText(email)
+              .then(() => {
+                console.log("Email copied to clipboard");
+                window.close();  // Move this line here
+              })
+              .catch((err) => {
+                console.error("Could not copy text: ", err);
+              });
+          })
+          .catch((err) => {
+            console.error("Error calling API: ", err);
+          });
+    </script>
+  </body>
+</html>
